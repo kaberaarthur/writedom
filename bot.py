@@ -246,22 +246,28 @@ while count == 0:
                         user_deadline = user_deadline.read()
                         user_deadline = int(user_deadline)
 
-                        if ddln_text < user_deadline:
+                        try:
+                            user_deadline = int(ddln_text)
+                        except ValueError:
                             print("Short Deadline")
                         else:
-                            # Selected Subjects
-                            subjects = open("subjects.txt", "r")
-                            subjects = [link.rstrip('\n') for link in subjects]
-                            # Check if Order is Within Desired Subjects    #/html/body/div[3]/div/div/div/div/div/main/div/div/div[1]/div[3]/div[2]/div[1]/div/div[1]/div[2]/div
-                            order_subject = browser.find_elements_by_xpath("/html/body/div[3]/div/div/div/div/div/main/div/div/div[1]/div[3]/div[2]/div[1]/div/div[1]/div[2]/div")
-                            order_subject = order_subject[0].text
-                            order_subject = order_subject.replace("Subject: ", "")
-                            if order_subject in subjects:
-                                # Apply                                       #/html/body/div[3]/div/div/div/div/div/main/div/div/div[1]/div[2]/div/div[5]/div/div/button/div
-                                apply_button = browser.find_elements_by_xpath("/html/body/div[3]/div/div/div/div/div/main/div/div/div[1]/div[2]/div/div[5]/div/div/button/div")
-                                if len(apply_button) > 0:
-                                    apply_button[0].click()
-                                    write_db.write(str(order) + "\n")
+                            if ddln_text < user_deadline:
+                                print("Short Deadline")
+                            else:
+                                # Selected Subjects
+                                subjects = open("subjects.txt", "r")
+                                subjects = [link.rstrip('\n') for link in subjects]
+                                # Check if Order is Within Desired Subjects
+                                order_subject = browser.find_elements_by_xpath("/html/body/div[3]/div/div/div/div/div/main/div/div/div[1]/div[3]/div[2]/div[1]/div/div[1]/div[2]/div")
+                                order_subject = order_subject[0].text
+                                order_subject = order_subject.replace("Subject: ", "")
+                                if order_subject in subjects:
+                                    # Apply
+                                    apply_button = browser.find_elements_by_xpath("/html/body/div[3]/div/div/div/div/div/main/div/div/div[1]/div[2]/div/div[5]/div/div/button/div")
+                                    if len(apply_button) > 0:
+                                        apply_button[0].click()
+                                        write_db.write(str(order) + "\n")
+
     write_db.close()
     run_kill()
 
